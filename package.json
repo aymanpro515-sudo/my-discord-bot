@@ -1,12 +1,11 @@
 {
   "name": "discord-selfbot",
   "version": "1.0.0",
-  "description": "Selfbot 24/7 on Render",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "discord.js-selfbot-v13": "13.14.3"
+    "discord.js-selfbot-v13": "^13.9.2"
   }
 }
