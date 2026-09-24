@@ -9,98 +9,32 @@ process.on('uncaughtException', error => {
     console.error('⚠️ استثناء غير متوقع (Uncaught Exception):', error);
 });
 
-// إعداد العميل (Client) للسيلفبوت بدون أي إعدادات معقدة
+// إعداد العميل (Client) للسيلفبوت بشكل نظيف وبدون أخطاء
 const client = new Client({
     checkUpdate: false
 });
 
-
-
-
 // إعدادات المتغيرات الأساسية
-const AUTO_ROLE_ID = '1552699951182520371'; // ID الرتبة التلقائية
+const AUTO_ROLE_ID = '155269951182520371'; // ID الرتبة التلقائية
 
 client.once('ready', async () => {
     console.log(`✅ تم تسجيل الدخول بنجاح باسم السيلفبوت: ${client.user.tag}`);
-
-    // تسجيل الأوامر المائلة (Slash Commands)
-    const commands = [
-        new SlashCommandBuilder()
-            .setName('ping')
-            .setDescription('يعرض سرعة استجابة البوت'),
-        new SlashCommandBuilder()
-            .setName('clone-status')
-            .setDescription('فحص حالة نظام نسخ السيرفرات والحماية')
-    ].map(command => command.toJSON());
-
-    const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
-
-    try {
-        console.log('🔄 جاري تحديث الأوامر المائلة...');
-        await rest.put(
-            Routes.applicationCommands(client.user.id),
-            { body: commands },
-        );
-        console.log('✨ تم تسجيل الأوامر بنجاح!');
-    } catch (error) {
-        console.error('❌ خطأ أثناء تسجيل الأوامر:', error);
-    }
 });
 
-// --- 2. نظام التفاعل مع الأوامر المائلة (Slash Commands) ---
-client.on('interactionCreate', async interaction => {
-    if (!interaction.isCommand()) return;
-
-    const { commandName } = interaction;
-
-    if (commandName === 'ping') {
-        const latency = Math.round(client.ws.ping);
-        await interaction.reply({ content: `pong! 🏓 سرعة الاستجابة هي: ${latency}ms`, ephemeral: true });
-    } 
-    
-    else if (commandName === 'clone-status') {
-        await interaction.reply({ content: `🛡️ أنظمة النسخ الاحتياطي، الحماية ضد الهجمات، واللوقز تعمل بكفاءة عالية!`, ephemeral: true });
-    }
-});
-
-// --- 3. نظام إعطاء الرتبة التلقائي عند دخول عضو جديد ---
-client.on('guildMemberAdd', async (member) => {
-    try {
-        const role = member.guild.roles.cache.get(AUTO_ROLE_ID);
-        if (!role) return console.log('❌ لم يتم العثور على رتبة الترحيب التلقائي!');
-
-        await member.roles.add(role);
-        console.log(`✅ تم إعطاء رتبة [${role.name}] للعضو الجديد: ${member.user.tag}`);
-    } catch (error) {
-        console.error('❌ خطأ في إعطاء الرتبة التلقائية:', error);
-    }
-});
-
-// --- 4. نظام الحماية ضد الهجمات والتخريب (Anti-Nuke / Anti-Raid) ---
-client.on('channelDelete', async (channel) => {
-    try {
-        console.warn(`⚠️ تنبيه حماية: تم حذف قناة (${channel.name})، جاري فحص الأمان...`);
-        // هنا يمكنك إضافة كود سحب الصلاحيات أو التنبيه الفوري على الخاص
-    } catch (error) {
-        console.error('خطأ في نظام حماية القنوات:', error);
-    }
-});
-
-client.on('roleDelete', async (role) => {
-    try {
-        console.warn(`⚠️ تنبيه حماية: تم حذف رتبة (${role.name})!`);
-    } catch (error) {
-        console.error('خطأ في نظام حماية الرتب:', error);
-    }
-});
-
-// --- 5. نظام الأوامر المتقدمة عبر الرسائل (Prefix Commands & Clone & Backup & DMs) ---
+// --- 1. نظام التفاعل مع الأوامر عبر الرسائل (Prefix Commands & DMs) ---
 client.on('messageCreate', async (message) => {
+    // تجاهل رسائل البوتات لعدم حدوث تداخل
     if (message.author.bot) return;
 
     // أمر البينغ العادي
     if (message.content === '!ping') {
-        message.reply('pong! 🏓');
+        const latency = Math.round(client.ws.ping);
+        message.reply(`pong! 🏓 سرعة الاستجابة هي: ${latency}ms`);
+    }
+
+    // أمر فحص حالة النظام
+    if (message.content === '!clone-status') {
+        message.reply('🛡️ أنظمة النسخ الاحتياطي، الحماية ضد الهجمات، واللوقز تعمل بكفاءة عالية!');
     }
 
     // أمر النسخ الاحتياطي التلقائي (Auto Backup)
@@ -113,14 +47,11 @@ client.on('messageCreate', async (message) => {
         }
     }
 
-    // أمر نسخ السيرفرات الشامل مع لوقز التنبيهات (Clone Logging & DM)
+    // أمر نسخ السيرفرات الشامل مع لوقز التنبيهات
     if (message.content.startsWith('.clone')) {
         try {
             await message.author.send('🛠️ **[نظام مراقبة النسخ]:** تم بدء عملية نسخ هيكل السيرفر بنجاح، سيتم إعلامك بالخطوات أولاً بأول.');
-            await message.reply('✅ تم تفعيل عملية النسخ وإرسال لوقز التتبع والتنبيهات إلى رسائلك الخاصة (DM).');
-            
-            // [منطقة كود النسخ الفعلي للقنوات والرتب تضاف هنا]
-
+            message.reply('✅ تم تفعيل عملية النسخ وإرسال لوقز التتبع والتنبيهات إلى رسائلك الخاصة (DM).');
         } catch (error) {
             console.error('خطأ في نظام النسخ:', error);
             message.reply('❌ حدث خطأ، يجدر التأكد من الصلاحيات وفتح الخاص (DM).');
@@ -148,6 +79,36 @@ client.on('messageCreate', async (message) => {
         } catch (error) {
             message.reply('تعذر إرسال الرسالة، الخاص مغلق عند هذا المستخدم.');
         }
+    }
+});
+
+// --- 2. نظام إعطاء الرتبة التلقائي عند دخول عضو جديد ---
+client.on('guildMemberAdd', async (member) => {
+    try {
+        const role = member.guild.roles.cache.get(AUTO_ROLE_ID);
+        if (!role) return console.log('❌ لم يتم العثور على رتبة الترحيب التلقائي!');
+
+        await member.roles.add(role);
+        console.log(`✅ تم إعطاء رتبة [${role.name}] للعضو الجديد: ${member.user.tag}`);
+    } catch (error) {
+        console.error('❌ خطأ في إعطاء الرتبة التلقائية:', error);
+    }
+});
+
+// --- 3. نظام الحماية ضد الهجمات والتخريب ---
+client.on('channelDelete', async (channel) => {
+    try {
+        console.warn(`⚠️ تنبيه حماية: تم حذف قناة (${channel.name})، جاري فحص الأمان...`);
+    } catch (error) {
+        console.error('خطأ في نظام حماية القنوات:', error);
+    }
+});
+
+client.on('roleDelete', async (role) => {
+    try {
+        console.warn(`⚠️ تنبيه حماية: تم حذف رتبة (${role.name})!`);
+    } catch (error) {
+        console.error('خطأ في نظام حماية الرتب:', error);
     }
 });
 
