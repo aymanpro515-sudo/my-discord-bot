@@ -9,10 +9,9 @@ process.on('uncaughtException', error => {
     console.error('⚠️ استثناء غير متوقع (Uncaught Exception):', error);
 });
 
-// إعداد العميل (Client) للسيلفبوت
+// إعداد العميل (Client) للسيلفبوت بدون أي إعدادات معقدة
 const client = new Client({
-    checkUpdate: false,
-    intents: 32767 // استخدام الرقم الشامل لتجنب أخطاء الصلاحيات
+    checkUpdate: false
 });
 
 
