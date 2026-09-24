@@ -11,6 +11,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "discord.js-selfbot-v13": "^13.5.1"
+    "discord.js-selfbot-v13": "latest"
   }
 }
