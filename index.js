@@ -1,8 +1,7 @@
 const { Client } = require('discord.js-selfbot-v13');
 
 const client = new Client({
-    checkUpdate: false,
-    autoRedeemNitro: false
+    checkUpdate: false
 });
 
 // --- نظام الحماية الشامل (منع توقف السيلفبوت) ---
@@ -14,10 +13,10 @@ process.on('uncaughtException', error => {
     console.error('⚠️ استثناء غير متوقع (Uncaught Exception):', error);
 });
 
-// إعداد العميل (Client) للسيلفبوت بشكل نظيف وبدون أخطاء
-const client = new Client({
-    checkUpdate: false
-});
+// باقي أكواد بوتك الخاصة بتسجيل الدخول والتشغيل هنا...
+
+// --- باقي أكواد البوت الخاصة بتسجيل الدخول والتشغيل هنا ---
+client.login('MTU1MjY3NjIwNDA3NzkxNjI2MQ.GGKEgo.gZVDPUdP0sTPaCai9ykq1WPGqqF2zs5V0EUsTc');
 
 // إعدادات المتغيرات الأساسية
 const AUTO_ROLE_ID = '155269951182520371'; // ID الرتبة التلقائية
