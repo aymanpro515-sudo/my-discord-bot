@@ -1,23 +1,20 @@
-const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } = require('discord.js-selfbot-v13');
+const { Client } = require('discord.js-selfbot-v13');
 
-// --- 1. نظام الحماية الشامل (منع توقف السيلفبوت) ---
+// --- نظام الحماية الشامل (منع توقف السيلفبوت) ---
 process.on('unhandledRejection', error => {
-    console.error('⚠️ خطأ غير معالج (Unhandled Rejection):', error);
+    console.error('⚠️ خطأ غير معالـج (Unhandled Rejection):', error);
 });
 
 process.on('uncaughtException', error => {
     console.error('⚠️ استثناء غير متوقع (Uncaught Exception):', error);
 });
 
-// إعداد العميل (Client) مع الصلاحيات والـ Intents الكاملة
+// إعداد العميل (Client) للسيلفبوت
 const client = new Client({
-    checkUpdate: false,
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildMembers // ضروري جداً لاستشعار الأعضاء والحماية
-    ]
+    checkUpdate: false
+    // في السيلفبوت لا داعي لكتابة Intents المعقدة لتجنب الأخطاء
+});
+
 });
 
 // إعدادات المتغيرات الأساسية
