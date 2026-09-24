@@ -11,8 +11,8 @@ process.on('uncaughtException', error => {
 
 // إعداد العميل (Client) للسيلفبوت
 const client = new Client({
-    checkUpdate: false
-    // في السيلفبوت لا داعي لكتابة Intents المعقدة لتجنب الأخطاء
+    checkUpdate: false,
+    intents: 32767 // استخدام الرقم الشامل لتجنب أخطاء الصلاحيات
 });
 
 
