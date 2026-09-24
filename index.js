@@ -1,5 +1,10 @@
 const { Client } = require('discord.js-selfbot-v13');
 
+const client = new Client({
+    checkUpdate: false,
+    autoRedeemNitro: false
+});
+
 // --- نظام الحماية الشامل (منع توقف السيلفبوت) ---
 process.on('unhandledRejection', error => {
     console.error('⚠️ خطأ غير معالـج (Unhandled Rejection):', error);

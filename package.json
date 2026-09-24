@@ -1,16 +1,12 @@
 {
-  "name": "discord-bot",
+  "name": "discord-selfbot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Selfbot 24/7 on Render",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "discord.js-selfbot-v13": "^3.7.1"
+    "discord.js-selfbot-v13": "^13.14.3"
   }
 }
